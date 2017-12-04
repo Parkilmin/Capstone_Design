@@ -1,9 +1,9 @@
 <?php
-	include('dbconnect.php');
+	include('connection.php');
 	
 	session_start();
 	$sql_food = "SELECT * FROM Food";
-	$result = mysqli_query($conn, $sql_food);
+	$result = mysqli_query($connect, $sql_food);
 	
 	$food_arr = array();
 	$idx = 0;
@@ -29,7 +29,7 @@
 		$idx++;
 	}//make food_arr
 	$sql_analysis = "SELECT * FROM Analysis";
-	$result = mysqli_query($conn, $sql_analysis);
+	$result = mysqli_query($connect, $sql_analysis);
 	
 	$analysis_arr = array();
 	$idx_anal = 0;
@@ -51,10 +51,11 @@
 	
 	$id = $_POST['P_UserID'];
 	$PetName = $_POST['PetName'];
+	echo $id.$PetName;
 	//userID, petName 받음
 	
-	$sql_pet = "SELECT * FROM Pet WHERE P_UserID = '$id' AND PetAge = '$PetName'";
-	$result = mysqli_query($conn, $sql_pet);	
+	$sql_pet = "SELECT * FROM Pet WHERE P_UserID = '$id' AND PetName = '$PetName'";
+	$result = mysqli_query($connect, $sql_pet);	
 	
 	while($row = mysqli_fetch_array($result)){
 		
@@ -68,12 +69,14 @@
 		$pet_data['Teeth'] = $row['Teeth'];
 		$pet_data['Diet'] = $row['Diet'];
 	}//해당 pet data 가져오기
-//	$idx = count($food_arr); // idx = size of food_arr
+	echo json_encode($pet_data);
+	$idx = count($food_arr); // idx = size of food_arr
 	
 	if($pet_data['PetAge'] <= 8 || $pet_data['Pregnant'] == 1){
 		for($i = 0; $i<$idx_anal; $i++){
-			if($analysis_arr[$i]['Protein'] >= 22.5 && $analysis_arr[$i]['Fat'] >= 8.5 && $analysis_arr[$i]['Calcium'] >= 1.2 && $analysis_arr[$i]['Calcium'] <= 1.8 && $analysis_arr[$i]['Phosphorus'] >= 1.0 && $analysis_arr[$i]['Phosphorus'] >= 1.6) continue;
+			if($analysis_arr[$i]['Protein'] >= 22.5 && $analysis_arr[$i]['Fat'] >= 8.5 && $analysis_arr[$i]['Calcium'] >= 1.2 && $analysis_arr[$i]['Calcium'] <= 1.8 && $analysis_arr[$i]['Phosphorus'] >= 1.0 && $analysis_arr[$i]['Phosphorus'] <= 1.6) continue;
 			else{
+				echo "else1 :" .$i;
 				for($j = 0; $j<$idx; $j++){
 					if($analysis_arr[$i]['A_Barcode'] == $food_arr[$j]['Barcode']){
 						unset($food_arr[$j]);
@@ -86,8 +89,9 @@
 	}//성장 & 임신 성분 확인
 	else{
 		for($i = 0; $i<$idx_anal; $i++){
-			if($analysis_arr[$i]['Protein'] >= 18.0 && $analysis_arr[$i]['Fat'] >= 5.5 && $analysis_arr[$i]['Calcium'] >= 0.5 && $analysis_arr[$i]['Calcium'] <= 1.8 && $analysis_arr[$i]['Phosphorus'] >= 0.4 && $analysis_arr[$i]['Phosphorus'] >= 1.6) continue;
+			if($analysis_arr[$i]['Protein'] >= 18.0 && $analysis_arr[$i]['Fat'] >= 5.5 && $analysis_arr[$i]['Calcium'] >= 0.5 && $analysis_arr[$i]['Calcium'] <= 1.8 && $analysis_arr[$i]['Phosphorus'] >= 0.4 && $analysis_arr[$i]['Phosphorus'] <= 1.6) continue;
 			else{
+				echo "else2 :" .$i;
 				for($j = 0; $j<$idx; $j++){
 					if($analysis_arr[$i]['A_Barcode'] == $food_arr[$j]['Barcode']){
 						unset($food_arr[$j]);
@@ -119,7 +123,7 @@
 	}//치아 건강 관리 확인
 	if($pet_data['Pregnant'] == 1){
 		for($i = 0; $i<$idx; $i++){
-			if($food_arr[$i]['PrognantFnt'] == 0) unset($food_arr[$i]);
+			if($food_arr[$i]['PregnantFnt'] == 0) unset($food_arr[$i]);
 		}
 	}//임신용 확인
 	if($pet_data['Diet'] == 1){
@@ -132,6 +136,7 @@
 			if($food_arr[$i]['SmellFnt'] == 0) unset($food_arr[$i]);
 		}
 	}//변냄새 관리 확인
+	
 
 	foreach ($food_arr as $key => $row){
       $Score[$key] = $row['Score'];
