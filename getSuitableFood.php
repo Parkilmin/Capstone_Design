@@ -2,13 +2,11 @@
 	include('dbconnect.php');
 	
 	session_start();
-
 	$sql_food = "SELECT * FROM Food";
 	$result = mysqli_query($conn, $sql_food);
 	
 	$food_arr = array();
 	$idx = 0;
-
 	while($row = mysqli_fetch_array($result)){
 		$food_arr[$idx] = array();
 	
@@ -18,7 +16,6 @@
 		$food_arr[$idx]['FoodWeight'] = $row['FoodWeight'];
 		$food_arr[$idx]['Origin'] = $row['Origin'];
 		$food_arr[$idx]['Maker'] = $row['Maker'];
-		$food_arr[$idx]['SalesOrImport'] = $row['SalesOrImport'];		
 		$food_arr[$idx]['Whom'] = $row['Whom'];
 		$food_arr[$idx]['BreedFrom'] = $row['BreedFrom'];
 		$food_arr[$idx]['BreedTo'] = $row['BreedTo'];
@@ -29,16 +26,13 @@
 		$food_arr[$idx]['AgeFrom'] = $row['AgeFrom'];
 		$food_arr[$idx]['AgeTo'] = $row['AgeTo'];
 		$food_arr[$idx]['Score'] = $row['Score'];
-
 		$idx++;
 	}//make food_arr
-
 	$sql_analysis = "SELECT * FROM Analysis";
 	$result = mysqli_query($conn, $sql_analysis);
 	
 	$analysis_arr = array();
 	$idx_anal = 0;
-
 	while($row = mysqli_fetch_array($result)){
 		$analysis_arr[$idx_anal] = array();
 	
@@ -52,7 +46,6 @@
 		$analysis_arr[$idx_anal]['Phosphorus'] = $row['Phosphorus'];
 		$analysis_arr[$idx_anal]['Omega3'] = $row['Omega3'];
 		$analysis_arr[$idx_anal]['Omega6'] = $row['Omega6'];
-
 		$idx_anal++;
 	}//make analysis_arr
 	
@@ -74,12 +67,10 @@
 		$pet_data['StoolSmell'] = $row['StoolSmell'];
 		$pet_data['Teeth'] = $row['Teeth'];
 		$pet_data['Diet'] = $row['Diet'];
-
 	}//해당 pet data 가져오기
-
 //	$idx = count($food_arr); // idx = size of food_arr
 	
-	if($pet_data['PetAge'] <= 0.8 || $pet_data['Pregnant'] == 1){
+	if($pet_data['PetAge'] <= 8 || $pet_data['Pregnant'] == 1){
 		for($i = 0; $i<$idx_anal; $i++){
 			if($analysis_arr[$i]['Protein'] >= 22.5 && $analysis_arr[$i]['Fat'] >= 8.5 && $analysis_arr[$i]['Calcium'] >= 1.2 && $analysis_arr[$i]['Calcium'] <= 1.8 && $analysis_arr[$i]['Phosphorus'] >= 1.0 && $analysis_arr[$i]['Phosphorus'] >= 1.6) continue;
 			else{
@@ -93,7 +84,6 @@
 			}
 		}
 	}//성장 & 임신 성분 확인
-
 	else{
 		for($i = 0; $i<$idx_anal; $i++){
 			if($analysis_arr[$i]['Protein'] >= 18.0 && $analysis_arr[$i]['Fat'] >= 5.5 && $analysis_arr[$i]['Calcium'] >= 0.5 && $analysis_arr[$i]['Calcium'] <= 1.8 && $analysis_arr[$i]['Phosphorus'] >= 0.4 && $analysis_arr[$i]['Phosphorus'] >= 1.6) continue;
@@ -108,13 +98,11 @@
 			}
 		}
 	}//성견
-
 	if($pet_data['Species'] == 0){
 		for($i = 0; $i<$idx; $i++){
 			if($food_arr[$i]['Whom'] == 1) unset($food_arr[$i]);
 		}
 	}//Dog OR Cat
-
 	for($i = 0; $i<$idx; $i++){
 		if($pet_data['PetAge'] >= $food_arr[$i]['AgeFrom'] && $pet_data['PetAge'] <= $food_arr[$i]['AgeTo']) continue;
 		else unset($food_arr[$i]);
@@ -124,33 +112,38 @@
 		if($pet_data['Breed'] >= $food_arr[$i]['BreedFrom'] && $pet_data['Breed'] <= $food_arr[$i]['BreedTo']) continue;
 		else unset($food_arr[$i]);
 	}//Breed 확인
-
 	if($pet_data['Teeth'] == 1){
 		for($i = 0; $i<$idx; $i++){
 			if($food_arr[$i]['TeethFnt'] == 0) unset($food_arr[$i]);
 		}
 	}//치아 건강 관리 확인
-
 	if($pet_data['Pregnant'] == 1){
 		for($i = 0; $i<$idx; $i++){
 			if($food_arr[$i]['PrognantFnt'] == 0) unset($food_arr[$i]);
 		}
 	}//임신용 확인
-
 	if($pet_data['Diet'] == 1){
 		for($i = 0; $i<$idx; $i++){
 			if($food_arr[$i]['DietFnt'] == 0) unset($food_arr[$i]);
 		}
 	}//체중관리 OR 중성화용 확인
-
 	if($pet_data['StoolSmell'] == 1){
 		for($i = 0; $i<$idx; $i++){
 			if($food_arr[$i]['SmellFnt'] == 0) unset($food_arr[$i]);
 		}
 	}//변냄새 관리 확인
 
-
-
+	foreach ($food_arr as $key => $row){
+      $Score[$key] = $row['Score'];
+   	}
+   	array_multisort($Score, SORT_DESC, $food_arr);
+   	
+	if($idx>4){
+		for($i = 5; $i<$idx; $i++){
+			unset($food_arr[$i]);
+		}
+	
+	}
 //적합사료 정보 리턴
 	echo json_encode($food_arr);
 ?>
