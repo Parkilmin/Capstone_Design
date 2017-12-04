@@ -18,6 +18,7 @@
 		$food_arr[$idx]['FoodWeight'] = $row['FoodWeight'];
 		$food_arr[$idx]['Origin'] = $row['Origin'];
 		$food_arr[$idx]['Maker'] = $row['Maker'];
+		$food_arr[$idx]['SalesOrImport'] = $row['SalesOrImport'];		
 		$food_arr[$idx]['Whom'] = $row['Whom'];
 		$food_arr[$idx]['BreedFrom'] = $row['BreedFrom'];
 		$food_arr[$idx]['BreedTo'] = $row['BreedTo'];
@@ -27,6 +28,7 @@
 		$food_arr[$idx]['DietFnt'] = $row['DietFnt'];
 		$food_arr[$idx]['AgeFrom'] = $row['AgeFrom'];
 		$food_arr[$idx]['AgeTo'] = $row['AgeTo'];
+		$food_arr[$idx]['Score'] = $row['Score'];
 
 		$idx++;
 	}//make food_arr
