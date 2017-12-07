@@ -137,7 +137,6 @@
 		}
 	}//변냄새 관리 확인
 	
-
 	foreach ($food_arr as $key => $row){
       $Score[$key] = $row['Score'];
    	}
