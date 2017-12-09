@@ -102,12 +102,10 @@
 		}
 	}//성견
 	
-	if($pet_data['Species'] == 0){
-		if($food_arr['Whom'] == 1){
-			echo "check3";
-			echo("</br>");
-			$return_arr['check3'] = false;
-		}
+	if($pet_data['Species'] != $food_arr['Whom']){
+		echo "check3";
+		echo("</br>");
+		$return_arr['check3'] = false;
 	}//Dog OR Cat
 	
 	if($pet_data['PetAge'] < $food_arr['AgeFrom'] || $pet_data['PetAge'] > $food_arr['AgeTo']){
@@ -140,7 +138,7 @@
 		$return_arr['check8'] = false; 
 	}//체중관리 OR 중성화용 확인
 
-	if($pet_data['StoolSmell'] == 1 && $food_arr[$i]['SmellFnt'] == 0){
+	if($pet_data['StoolSmell'] == 1 && $food_arr['SmellFnt'] == 0){
 		echo "check9";
 		echo("</br>");
 		$return_arr['check9'] = false;

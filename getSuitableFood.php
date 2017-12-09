@@ -1,5 +1,5 @@
 <?php
-	include('connection.php');
+	include('./Android/connection.php');
 	
 	session_start();
 	$sql_food = "SELECT * FROM Food";
@@ -69,29 +69,33 @@
 		$pet_data['Teeth'] = $row['Teeth'];
 		$pet_data['Diet'] = $row['Diet'];
 	}//해당 pet data 가져오기
-	echo json_encode($pet_data);
+	echo json_encode($pet_data, JSON_UNESCAPED_UNICODE);
+	echo("</br>");
 	$idx = count($food_arr); // idx = size of food_arr
 	
 	if($pet_data['PetAge'] <= 8 || $pet_data['Pregnant'] == 1){
 		for($i = 0; $i<$idx_anal; $i++){
-			if($analysis_arr[$i]['Protein'] >= 22.5 && $analysis_arr[$i]['Fat'] >= 8.5 && $analysis_arr[$i]['Calcium'] >= 1.2 && $analysis_arr[$i]['Calcium'] <= 1.8 && $analysis_arr[$i]['Phosphorus'] >= 1.0 && $analysis_arr[$i]['Phosphorus'] <= 1.6) continue;
+			if($analysis_arr[$i]['Protein'] >= 22.5 && $analysis_arr[$i]['Fat'] >= 8.5 ) continue;
+			//&& $analysis_arr[$i]['Calcium'] >= 1.2 && $analysis_arr[$i]['Calcium'] <= 1.8 && $analysis_arr[$i]['Phosphorus'] >= 1.0 && $analysis_arr[$i]['Phosphorus'] <= 1.6
 			else{
-				echo "else1 :" .$i;
 				for($j = 0; $j<$idx; $j++){
 					if($analysis_arr[$i]['A_Barcode'] == $food_arr[$j]['Barcode']){
 						unset($food_arr[$j]);
 						unset($analysis_arr[$i]);
+
 						break;
 					}	
 				}
 			}
 		}
+
 	}//성장 & 임신 성분 확인
+
 	else{
 		for($i = 0; $i<$idx_anal; $i++){
-			if($analysis_arr[$i]['Protein'] >= 18.0 && $analysis_arr[$i]['Fat'] >= 5.5 && $analysis_arr[$i]['Calcium'] >= 0.5 && $analysis_arr[$i]['Calcium'] <= 1.8 && $analysis_arr[$i]['Phosphorus'] >= 0.4 && $analysis_arr[$i]['Phosphorus'] <= 1.6) continue;
+			if($analysis_arr[$i]['Protein'] >= 18.0 && $analysis_arr[$i]['Fat'] >= 5.5) continue;
+			// && $analysis_arr[$i]['Calcium'] >= 0.5 && $analysis_arr[$i]['Calcium'] <= 1.8 && $analysis_arr[$i]['Phosphorus'] >= 0.4 && $analysis_arr[$i]['Phosphorus'] <= 1.6
 			else{
-				echo "else2 :" .$i;
 				for($j = 0; $j<$idx; $j++){
 					if($analysis_arr[$i]['A_Barcode'] == $food_arr[$j]['Barcode']){
 						unset($food_arr[$j]);
@@ -102,52 +106,87 @@
 			}
 		}
 	}//성견
-	if($pet_data['Species'] == 0){
-		for($i = 0; $i<$idx; $i++){
-			if($food_arr[$i]['Whom'] == 1) unset($food_arr[$i]);
+	for($i = 0; $i<$idx; $i++){
+		if($food_arr[$i]['Whom'] != $pet_data['Species']){
+			unset($food_arr[$i]);
 		}
 	}//Dog OR Cat
+	
 	for($i = 0; $i<$idx; $i++){
 		if($pet_data['PetAge'] >= $food_arr[$i]['AgeFrom'] && $pet_data['PetAge'] <= $food_arr[$i]['AgeTo']) continue;
-		else unset($food_arr[$i]);
+		else{
+		 	unset($food_arr[$i]);
+		}
 	}//Age 확인
 	
 	for($i = 0; $i<$idx; $i++){
 		if($pet_data['Breed'] >= $food_arr[$i]['BreedFrom'] && $pet_data['Breed'] <= $food_arr[$i]['BreedTo']) continue;
-		else unset($food_arr[$i]);
+		else{
+		 	unset($food_arr[$i]);
+		}
 	}//Breed 확인
 	if($pet_data['Teeth'] == 1){
 		for($i = 0; $i<$idx; $i++){
-			if($food_arr[$i]['TeethFnt'] == 0) unset($food_arr[$i]);
+			if($food_arr[$i]['TeethFnt'] == 0){
+			 	unset($food_arr[$i]);
+			}
 		}
 	}//치아 건강 관리 확인
 	if($pet_data['Pregnant'] == 1){
 		for($i = 0; $i<$idx; $i++){
-			if($food_arr[$i]['PregnantFnt'] == 0) unset($food_arr[$i]);
+			if($food_arr[$i]['PregnantFnt'] == 0){
+			 	unset($food_arr[$i]);
+			}
 		}
 	}//임신용 확인
 	if($pet_data['Diet'] == 1){
 		for($i = 0; $i<$idx; $i++){
-			if($food_arr[$i]['DietFnt'] == 0) unset($food_arr[$i]);
+			if($food_arr[$i]['DietFnt'] == 0){
+			 	unset($food_arr[$i]);
+			}
 		}
 	}//체중관리 OR 중성화용 확인
 	if($pet_data['StoolSmell'] == 1){
 		for($i = 0; $i<$idx; $i++){
-			if($food_arr[$i]['SmellFnt'] == 0) unset($food_arr[$i]);
+			if($food_arr[$i]['SmellFnt'] == 0){
+			 	unset($food_arr[$i]);
+			}
 		}
 	}//변냄새 관리 확인
-	
+
+	echo("</br>");
+	echo "before delete";
+	$arrlength = count($food_arr);
+   	echo $arrlength;
+
+	for($i = 0; $i<$idx; $i++){
+		for($j = $i+1; $j<$idx; $j++){
+			if($food_arr[$i]['FoodName'] == $food_arr[$j]['FoodName']){
+				unset($food_arr[$j]);
+			}
+		}
+	}
+
+	$food_arr = array_values($food_arr);
 	foreach ($food_arr as $key => $row){
       $Score[$key] = $row['Score'];
    	}
+ 
    	array_multisort($Score, SORT_DESC, $food_arr);
-   	
-	if($idx>4){
-		for($i = 5; $i<$idx; $i++){
+   	echo("</br>");
+	echo "after delete";
+   	$arrlength = count($food_arr);
+   	echo $arrlength;
+
+
+	if($arrlength>4){
+		echo "length Sub";
+		echo("</br>");
+		for($i = 5; $i<$arrlength; $i++){
 			unset($food_arr[$i]);
 		}
-	
 	}
 //적합사료 정보 리턴
-	echo json_encode($food_arr);
+	echo("</br>");
+	echo json_encode($food_arr, JSON_UNESCAPED_UNICODE);
 ?>
