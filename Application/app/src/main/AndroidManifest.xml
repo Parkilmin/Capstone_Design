@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.wonsi">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/intro"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/intro"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".IntroActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".LoginActivity"/>
+
+        <activity android:name=".MainActivity"/>
+        <activity android:name=".RegisterUserActivity"/>
+        <activity android:name=".RegisterPetActivity"/>
+        <activity android:name=".ShowFoodDataActivity"/>
+        <activity android:name=".GetPetTypeActivity"/>
+        <activity android:name=".ShowPetDataActivity"/>
+        <activity android:name=".ShowFoodContainActivity"/>
+        <activity android:name=".ShowRecommendFoodListActivity"/>
+        <activity android:name=".ShowFoodFitActivity"/>
+        <activity android:name=".ReadBarcodebyZxingActivity"/>
+            android:screenOrientation="fullSensor"
+            android:stateNotNeeded="true"
+            android:theme="@style/zxing_CaptureTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+
+    </application>
+
+</manifest>
