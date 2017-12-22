@@ -10,8 +10,8 @@
 	$sql = "SELECT * FROM User WHERE UserName = '$id' AND Password = '$pw'";
 
 	$result = mysqli_query($connect, $sql);
-
-	if($result){
+	$resc = mysqli_fetch_row($result);
+	if($resc){
 		echo "success";
 	}
 	else

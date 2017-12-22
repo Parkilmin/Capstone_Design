@@ -2,12 +2,29 @@
 	include('./Android/connection.php');
 	
 	session_start();
+	$username = $_POST['P_UserID'];
+	$sql_finduser = "SELECT UserID from User WHERE UserName = '$username'";
 
-	$id = $_POST['P_UserID'];
+	$userresult = mysqli_query($connect, $sql_finduser);
+	if(!$userresult){
+		die('Could not query');
+	}
+	$resc = mysqli_fetch_row($userresult);
+	$id = $resc[0];
+	//$id = $_POST['P_UserID'];
 	$PetName = $_POST['PetName'];
 	$Barcode = $_POST['Barcode'];
+	$sql_findbarcode = "SELECT FoodName from Food WHERE Barcode = '$Barcode'";
+
+	$barcoderesult = mysqli_query($connect, $sql_findbarcode);
+	if(!$barcoderesult){
+		die('Could not query');
+	}
+	$resc2 = mysqli_fetch_row($barcoderesult);
+	$foodname = $resc2[0];
 
 	$return_arr = array(); //return value
+	$return_arr['foodName'] = $foodname;
 	$return_arr['check1'] = true;//성장 & 임신 성분 확인
 	$return_arr['check2'] = true;//성견
 	$return_arr['check3'] = true;//Dog OR Cat
@@ -17,7 +34,6 @@
 	$return_arr['check7'] = true;//임신용 확인
 	$return_arr['check8'] = true;//체중관리 OR 중성화용 확인
 	$return_arr['check9'] = true;//변냄새 관리 확인
-
 	$sql_pet = "SELECT * FROM Pet WHERE P_UserID = '$id' AND PetName = '$PetName'";
 	$result = mysqli_query($connect, $sql_pet);	
 	
@@ -33,8 +49,8 @@
 		$pet_data['Teeth'] = $row['Teeth'];
 		$pet_data['Diet'] = $row['Diet'];
 	}//해당 pet data 가져오기
-	echo json_encode($pet_data);
-	echo("</br>");
+	// echo json_encode($pet_data);
+	// echo("</br>");
 	
 	$sql_food = "SELECT * FROM Food WHERE Barcode = '$Barcode'";
 	$result = mysqli_query($connect, $sql_food);
@@ -58,10 +74,8 @@
 		$food_arr['AgeTo'] = $row['AgeTo'];
 		$food_arr['Score'] = $row['Score'];
 	}//make food_arr
-
-	echo json_encode($food_arr);
-	echo("</br>");
-
+	// echo json_encode($food_arr);
+	// echo("</br>");
 	$sql_anal = "SELECT * FROM Analysis WHERE A_Barcode = '$Barcode'";
 	$result = mysqli_query($connect, $sql_anal);
 	
@@ -78,16 +92,14 @@
 		$analysis_arr['Omega3'] = $row['Omega3'];
 		$analysis_arr['Omega6'] = $row['Omega6'];
 	}//make analysis_arr
-
-	echo json_encode($analysis_arr);
-	echo("</br>");
-
+	// echo json_encode($analysis_arr);
+	// echo("</br>");
 	if($pet_data['PetAge'] <= 8 || $pet_data['Pregnant'] == 1){
 		
 		if($analysis_arr['Protein'] >= 22.5 && $analysis_arr['Fat'] >= 8.5 && $analysis_arr['Calcium'] >= 1.2 && $analysis_arr['Calcium'] <= 1.8 && $analysis_arr['Phosphorus'] >= 1.0 && $analysis_arr['Phosphorus'] <= 1.6);
 		else{
-			echo "check1";
-			echo("</br>");
+			// echo "check1";
+			// echo("</br>");
 			$return_arr['check1'] = false;
 		}
 		
@@ -96,58 +108,50 @@
 	else{
 		if($analysis_arr['Protein'] >= 18.0 && $analysis_arr['Fat'] >= 5.5 && $analysis_arr['Calcium'] >= 0.5 && $analysis_arr['Calcium'] <= 1.8 && $analysis_arr['Phosphorus'] >= 0.4 && $analysis_arr['Phosphorus'] <= 1.6);
 		else{
-			echo "check2";
-			echo("</br>");
+			// echo "check2";
+			// echo("</br>");
 			$return_arr['check2'] = false;			
 		}
 	}//성견
 	
-	if($pet_data['Species'] == 0){
-		if($food_arr['Whom'] == 1){
-			echo "check3";
-			echo("</br>");
-			$return_arr['check3'] = false;
-		}
+	if($pet_data['Species'] != $food_arr['Whom']){
+		// echo "check3";
+		// echo("</br>");
+		$return_arr['check3'] = false;
 	}//Dog OR Cat
 	
 	if($pet_data['PetAge'] < $food_arr['AgeFrom'] || $pet_data['PetAge'] > $food_arr['AgeTo']){
-		echo "check4";
-		echo("</br>");
+		// echo "check4";
+		// echo("</br>");
 		$return_arr['check4'] = false;
 	}//Age 확인
 	
 	if($pet_data['Breed'] < $food_arr['BreedFrom'] && $pet_data['Breed'] > $food_arr['BreedTo']){
-		echo "check5";
-		echo("</br>");
+		// echo "check5";
+		// echo("</br>");
 		$return_arr['check5'] = false;
 	}//Breed 확인
 	
 	if($pet_data['Teeth'] == 1 && $food_arr['TeethFnt'] == 0){
-		echo "check6";
-		echo("</br>");
+		// echo "check6";
+		// echo("</br>");
 		$return_arr['check6'] = false;
 	}//치아 건강 관리 확인
-
 	if($pet_data['Pregnant'] == 1 && $food_arr['PregnantFnt'] == 0){
-		echo "check7";
-		echo("</br>");
+		// echo "check7";
+		// echo("</br>");
 		$return_arr['check7'] = false;
 	}//임신용 확인
-
 	if($pet_data['Diet'] == 1 && $food_arr['DietFnt'] == 0){
-		echo "check8";
-		echo("</br>");
+		// echo "check8";
+		// echo("</br>");
 		$return_arr['check8'] = false; 
 	}//체중관리 OR 중성화용 확인
-
-	if($pet_data['StoolSmell'] == 1 && $food_arr[$i]['SmellFnt'] == 0){
-		echo "check9";
-		echo("</br>");
+	if($pet_data['StoolSmell'] == 1 && $food_arr['SmellFnt'] == 0){
+		// echo "check9";
+		// echo("</br>");
 		$return_arr['check9'] = false;
 	}//변냄새 관리 확인
 	
-
-	echo json_encode($return_arr);
-
-
+	echo json_encode($return_arr, JSON_UNESCAPED_UNICODE);
 ?>
