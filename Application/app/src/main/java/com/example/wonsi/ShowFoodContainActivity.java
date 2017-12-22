@@ -20,6 +20,10 @@ import android.widget.TextView;
 import com.example.wonsi.ListViewAdapter.FoodContainListViewAdapter;
 import com.example.wonsi.ListViewItemClass.FoodContain;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -90,6 +94,33 @@ public class ShowFoodContainActivity extends AppCompatActivity {
 
         foodContainList = new ArrayList<>();
 
+        containHorizontalBarChart = findViewById(R.id.Contain_Chart_Bar);
+        ArrayList<BarEntry> yVals1 = new ArrayList<>();
+        float barWidth = 9f;
+        float spaceForBar = 10f;
+        yVals1.add(new BarEntry(0 * spaceForBar, protein));
+        yVals1.add(new BarEntry(1 * spaceForBar, fat));
+        yVals1.add(new BarEntry(2 * spaceForBar, ash));
+        yVals1.add(new BarEntry(3 * spaceForBar, fiber));
+        yVals1.add(new BarEntry(4 * spaceForBar, moisture));
+        yVals1.add(new BarEntry(5 * spaceForBar, calcium));
+        yVals1.add(new BarEntry(6 * spaceForBar, phosphorus));
+        yVals1.add(new BarEntry(7 * spaceForBar, omega3));
+        yVals1.add(new BarEntry(8 * spaceForBar, omega6));
+        yVals1.add(new BarEntry(9 * spaceForBar, vitamina));
+        yVals1.add(new BarEntry(10 * spaceForBar, vitamind));
+        yVals1.add(new BarEntry(11 * spaceForBar, vitamine));
+
+        BarDataSet set;
+        set = new BarDataSet(yVals1,"성분");
+        set.setDrawIcons(false);
+        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+        dataSets.add(set);
+        BarData data = new BarData(dataSets);
+        data.setValueTextSize(10f);
+        data.setBarWidth(barWidth);
+        containHorizontalBarChart.setData(data);
+        containHorizontalBarChart.animateY(2500);
 
         listview_foodcontain = (ListView) findViewById(R.id.Contain_ListView_contains);
         listview_foodcontain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -208,3 +239,4 @@ public class ShowFoodContainActivity extends AppCompatActivity {
 
     }
 }
+

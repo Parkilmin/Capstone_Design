@@ -61,6 +61,7 @@ public class ShowRecommendFoodListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final String barcode = foodArrayList.get(i).getBarcode();
+                Log.d("Barcode : ", barcode);
                 AlertDialog.Builder builder = new AlertDialog.Builder(ShowRecommendFoodListActivity.this);
                 builder.setMessage("세부 정보 확인");
                 DialogInterface.OnClickListener okListener = new DialogInterface.OnClickListener() {

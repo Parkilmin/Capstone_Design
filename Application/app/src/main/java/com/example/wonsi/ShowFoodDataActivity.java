@@ -193,7 +193,7 @@ public class ShowFoodDataActivity extends AppCompatActivity {
             if (jsonObject.getInt("AgeFrom") > 12) {
                 int agefrom = jsonObject.getInt("AgeFrom") / 12;
                 tv_agefrom.setText(agefrom + "년");
-            } else tv_ageto.setText(jsonObject.getString("AgeFrom") + "개월");
+            } else tv_agefrom.setText(jsonObject.getString("AgeFrom") + "개월");
 
             if (jsonObject.getString("AgeTo").equals("1000")) tv_ageto.setText("무제한");
             else if (jsonObject.getInt("AgeTo") > 12) {
@@ -202,8 +202,8 @@ public class ShowFoodDataActivity extends AppCompatActivity {
             } else tv_ageto.setText(jsonObject.getString("AgeTo") + "개월");
 
             tv_score.setText(jsonObject.getString("Score"));
-            tv_reviewUserName.setText(jsonObject.getString("UserName"));
-            tv_reviewBody.setText(jsonObject.getString("Body"));
+//            tv_reviewUserName.setText(jsonObject.getString("UserName"));
+//            tv_reviewBody.setText(jsonObject.getString("Body"));
             addSpecial();
             ArrayList<PieEntry> entries = new ArrayList<>();
             ArrayList<String> labelList = new ArrayList<>();

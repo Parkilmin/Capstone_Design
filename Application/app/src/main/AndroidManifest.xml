@@ -31,6 +31,7 @@
         <activity android:name=".ShowFoodContainActivity"/>
         <activity android:name=".ShowRecommendFoodListActivity"/>
         <activity android:name=".ShowFoodFitActivity"/>
+        <activity android:name=".ShowReviewActivity"/>
         <activity android:name=".ReadBarcodebyZxingActivity"/>
             android:screenOrientation="fullSensor"
             android:stateNotNeeded="true"

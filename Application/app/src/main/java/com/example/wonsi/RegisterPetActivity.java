@@ -176,7 +176,7 @@ public class RegisterPetActivity extends AppCompatActivity implements View.OnCli
                     }
                 }
 
-                finish();
+                //finish();
 
                 break;
             case R.id.Pet_ET_pettype:
